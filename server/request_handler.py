@@ -43,6 +43,7 @@ class Server(object):
                 conn.sendsall(json.dumps(send_msg))
             except Exception() as e:
                 print(f"Exception{player.get_name()} disconected:", e)
+                conn.close()
 
     def handle_queue(self, player):
         self.connection_queue.append(player)
