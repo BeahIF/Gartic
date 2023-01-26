@@ -1,5 +1,6 @@
-from board import Board
-from round import Round
+from server.board import Board
+from server.round import Round
+from random import *
 
 
 class Game(object):
@@ -15,7 +16,8 @@ class Game(object):
 
     def start_new_round(self):
         # inicia um round com palavra
-        self.round = Round(self.get_word(), self.players[self.player_draw_ind])
+        round_word = self.get_word()
+        self.round = Round(round_word, self.players[self.player_draw_ind])
         self.player_draw_ind += 1
         if (self.player_draw_ind >= len(self.players)):
             self.end_round()
@@ -26,13 +28,21 @@ class Game(object):
         self.board = Board()
 
     def player_guess(self, player, guess):
-        #    permite que o jogador adivinhe a palavra
-
-        pass
+        #    permite que o jogador  adivinhe a palavra
+        return self.round.guess(player, guess)
 
     def player_disconnected(self, player):
         # limpa os objetos quando o jogador sai
-        pass
+        if player in self.players:
+            player_ind = self.players.index(player)
+            if player_ind >= self.player_draw_ind:
+                self.player_draw_ind -= 1
+            self.players.remove(player)
+            self.round.player_left()
+        else:
+            raise Exception("Player not in the game ")
+        if len(self.players < 2):
+            self.end_game()
 
     def skip(self):
         # Incrementa os rounds
@@ -58,7 +68,18 @@ class Game(object):
         self.board.update(x, y, color)
 
     def end_game(self):
+        for player in self.players:
+            self.round.player_left(player)
         pass
 
     def get_word(self):
-        pass
+        with open("words.txt", "r")as f:
+            words = []
+            for line in f:
+
+                wrd = line.strip()
+                if wrd not in self.words_used:
+                    words.append(wrd)
+            self.words_used.add(wrd)
+            r = random.randint(0, len(words))
+            return words[r].strip()

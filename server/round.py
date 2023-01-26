@@ -2,8 +2,9 @@ import time
 from _thread import *
 import time as t
 from _thread import *
-
-from chat import Chat
+from game import Game
+from server.chat import Chat
+import threading
 
 
 class Round(object):
@@ -20,6 +21,7 @@ class Round(object):
         self.time = 75
         self.start = time.time()
         self.chat = Chat(self)
+        threading.Timer(1, self.time_thread)
         start_new_thread(self.time_thread, ())
 
     def skip(self):
@@ -30,6 +32,16 @@ class Round(object):
         return False
 
     def get_scores(self):
+
+        # returns all the players scores
+        return self.scores
+
+    def get_score(self, player):
+        # get a specific player score
+        if player in self.player_scores:
+            return self.player_scores[player]
+        else:
+            raise Exception("Player not in score list")
 
     def time_thread(self):
         # gerencia do tempo
@@ -59,4 +71,4 @@ class Round(object):
             self.end_round("Tempo da rodada acabou ")
 
     def end_round(self, msg):
-        pass
+        self.game.round_ended()

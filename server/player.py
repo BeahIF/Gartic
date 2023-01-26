@@ -5,19 +5,26 @@ class Player(object):
         self.name = name
         self.score = 0
 
+    def set_game(self, game):
+        "sets players game association"
+        self.game = game
+
     def update_score(self, x):
         self.score += x
 
-    def guess(self, string):
-        pass
+    def guess(self, wrd):
+        # makes a player guess
+        return self.game.player_Guess(self, wrd)
 
     def disconnect(self):
+        self.game.player_disconnected()
         pass
 
     def get_score(self):
         return self.score
 
     def get_name(self):
+
         return self.name
 
     def get_ip(self):
