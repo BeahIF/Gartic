@@ -1,7 +1,7 @@
 import socket
 import threading
-from .player import Player
-from .game import Game
+from player import Player
+from game import Game
 import json
 
 
@@ -81,7 +81,7 @@ class Server(object):
 
     def authentication(conn, addr):
         try:
-            data = conn.recv(2048)
+            data = conn.recv(1024)
             name = str(data.decode())
             if not name:
                 raise Exception("No name received")
@@ -89,10 +89,11 @@ class Server(object):
         except Exception as e:
             print("Exceprion", e)
             conn.close()
-        threading.Thread(target=self.player_thread, args=(conn, addr, name))
-
+        thread = threading.Thread(target=self.player_thread, args=(conn, addr, name))
+        thread.start()
+        
     def connection_thread():
-        server = ""
+        server = "localhost"
         port = 5555
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -108,4 +109,6 @@ class Server(object):
             self.authentication(addr)
 
     if __name__ == "__main__":
-        threading.Thread(target=connection_thread())
+        s = Server()
+        thread = threading.Thread(target=connection_thread())
+        thread.start()

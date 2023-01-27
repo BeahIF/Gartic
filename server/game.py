@@ -1,5 +1,5 @@
-from server.board import Board
-from server.round import Round
+from board import Board
+from round import Round
 from random import *
 
 

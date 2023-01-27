@@ -2,8 +2,8 @@ import time
 from _thread import *
 import time as t
 from _thread import *
-from game import Game
-from server.chat import Chat
+#from game import Game
+from chat import Chat
 import threading
 
 
