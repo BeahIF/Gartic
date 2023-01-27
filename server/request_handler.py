@@ -23,27 +23,43 @@ class Server(object):
                 data = conn.recv(1024)
                 data = json.loads(data)
                 keys = [key for key in data.keys()]
-                if key in keys:
-                    if key == -1:
+                send_msg = {key:[] for key in keys}
+                
+                for key in keys:
+                    if key == -1:#get game, retorna uma lista de jogadores  
+                        if player.game: 
+                            send_msg[-1] = player.game.players
+                        else:
+                            send_msg[-1] = []
+                    if player.game:
+                        if key == 0: #guess
+                            correct = player.game.player_guess(player, data[0][0])
+                            send_msg[0] = [correct]
+                        elif key == 1: #skip
+                            skip = player.game.skip()
+                            send_msg[1] = [skip]
+                        elif key == 2: #get chat 
+                            content = player.game.round.chat.get_chat()
+                            send_msg[2] = content
+                        elif key == 3: #get board
+                            brd = player.game.board.get_board()
+                            send_msg[3] = brd 
+                        elif key == 4:pass #get score 
+                            
+                        elif key == 5:pass #get round
 
-                    elif key == -1:
-                    elif key == 0:
-                    elif key == 2:
-                    elif key == 3:
-                    elif key == 4:
-                    elif key == 5:
-
-                    elif key == 6:
-                    elif key == 7:
-                    elif key == 8:
-                    elif key == 9:
-                    else:
-                        raise Exception("Not valid request")
+                        elif key == 6:pass #get word
+                        elif key == 7:pass #get skips
+                        elif key == 8:pass #update board 
+                        elif key == 9:pass #get round time
+                        else:
+                            raise Exception("Not valid request")
 
                 conn.sendsall(json.dumps(send_msg))
             except Exception() as e:
                 print(f"Exception{player.get_name()} disconected:", e)
                 conn.close()
+                # TODO call player game disconected method
 
     def handle_queue(self, player):
         self.connection_queue.append(player)
