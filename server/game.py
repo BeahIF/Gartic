@@ -12,13 +12,17 @@ class Game(object):
         self.board = Board()
         self.player_draw_ind = 0
         self.connected_thread = thread
+        self.round_count = 1
         self.start_new_round()
+
 
     def start_new_round(self):
         # inicia um round com palavra
         round_word = self.get_word()
         self.round = Round(round_word, self.players[self.player_draw_ind])
         self.player_draw_ind += 1
+        self.round_count += 1
+        
         if (self.player_draw_ind >= len(self.players)):
             self.end_round()
             self.end_game()
@@ -44,6 +48,10 @@ class Game(object):
         if len(self.players < 2):
             self.end_game()
 
+    def get_player_scores(self): #retorna um dicionario com a pontuação dos jogadores
+        scores = {player:player.get_score() for player in self.players}
+        return scores
+    
     def skip(self):
         # Incrementa os rounds
         if (self.round):
