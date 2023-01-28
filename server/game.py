@@ -53,7 +53,7 @@ class Game(object):
             self.end_game()
 
     def get_player_scores(self):  # retorna um dicionario com a pontuação dos jogadores
-        scores = {player: player.get_score() for player in self.players}
+        scores = {player.name: player.get_score() for player in self.players}
         return scores
 
     def skip(self):

@@ -22,6 +22,15 @@ class Network:
             # print(e)
             self.disconnect(e)
 
+    def send_str(self,data):
+        try:
+            self.client.connect(self.addr)
+            self.client.sendall(self.name.encode())
+            return json.loads(self.client.recv(2048))
+        except Exception as e:
+            # print(e)
+            self.disconnect(e)
+
     def send(self, data):
         try:
             self.client.send(json.dumps(data).encode())
@@ -30,15 +39,27 @@ class Network:
             while 1:
                 last = self.client.recv(1024).decode()
                 d += last
+                
                 try:
-                    if last.count("}") == 1:
+                    if d.count(".") == 1:
                         break
                 except:
-                    break
+                    pass
+                
+                
+                
+            try:
+                if d[-1] == ".":
+                    d = d[:-1]
+                    
+            except:
+                pass
 
-            return json.loads(d)
+            keys = [key for key in data.keys()]
+
+            return json.loads(d)[str(keys[0])]
         except socket.error as e:
-            print(e)
+            self.disconnect(e)
 
     def disconnect(self, msg):
         print("exception disconected from server", msg)
@@ -52,4 +73,9 @@ class Network:
 
 n = Network("Finge que tem um nome interessante")
 # print(n.connect())
-print(n.send({3: []}))
+print("send 1")
+time = n.send({9: []})
+print(time)
+print("send 2")
+time = n.send({9: []})
+print(time)
