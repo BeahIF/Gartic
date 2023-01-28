@@ -41,4 +41,4 @@ class Network:
 
 n = Network("Finge que tem um nome interessante")
 # print(n.connect())
-print(n.send({0: []}))
+print(n.send({1: []}))

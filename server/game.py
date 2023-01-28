@@ -4,29 +4,32 @@ from random import *
 
 
 class Game(object):
-    def __init__(self, id, players, thread):
+    def __init__(self, id, players):
         self.id = id
         self.players = players
-        self.words_used = []
+        self.words_used = set()
         self.round = None
         self.board = Board()
         self.player_draw_ind = 0
-        self.connected_thread = thread
+        #self.connected_thread = thread
         self.round_count = 1
         self.start_new_round()
 
     def start_new_round(self):
         # inicia um round com palavra
-        round_word = self.get_word()
-        self.round = Round(
-            round_word, self.players[self.player_draw_ind], self.players, self)
-        # self.player_draw_ind += 1
-        self.round_count += 1
+        try:
+            round_word = self.get_word()
+            self.round = Round(
+                round_word, self.players[self.player_draw_ind], self.players, self)
+            # self.player_draw_ind += 1
+            self.round_count += 1
 
-        if (self.player_draw_ind >= len(self.players)):
-            self.round_ended()
+            if (self.player_draw_ind >= len(self.players)):
+                self.round_ended()
+                self.end_game()
+            self.player_draw_ind += 1
+        except Exception as e:
             self.end_game()
-        self.player_draw_ind += 1
 
     def create_board(self):
         # creates a blank board
@@ -59,6 +62,8 @@ class Game(object):
             new_round = self.round.skip()
             if new_round:
                 self.round_ended()
+                return True
+            return False
         else:
             raise Exception("Nenhum round iniciado!")
         pass
@@ -77,9 +82,11 @@ class Game(object):
         self.board.update(x, y, color)
 
     def end_game(self):
+        print(f"[GAME] Game {self.id} ended")
+        
         for player in self.players:
             self.round.player_left(player)
-        pass
+        
 
     def get_word(self):
         with open("words.txt", "r")as f:

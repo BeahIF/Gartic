@@ -8,7 +8,7 @@ import threading
 
 
 class Round(object):
-    def __init__(self, word, player_drawing, game):
+    def __init__(self, word, player_drawing, players, game):
         # param word:str
         # param player_Drawing : Player
         # param players: Player[]
@@ -16,13 +16,13 @@ class Round(object):
         self.player_drawing = player_drawing
         self.player_guessed = []
         self.skips = 0
-        self.game = game
-        self.player_scores = {player: 0 for player in self.game.players}
         self.time = 75
-        self.player_scores = players
-        self.start = time.time()
+        self.players = players
+        self.player_scores = {player: 0 for player in self.players}
+        self.game = game
+        #self.start = time.time()
         self.chat = Chat(self)
-        threading.Timer(1, self.time_thread)
+        #threading.Timer(1, self.time_thread)
         start_new_thread(self.time_thread, ())
 
     def skip(self):
@@ -59,6 +59,9 @@ class Round(object):
         correct = wrd == self.word
         if (correct):
             self.player_guessed.append(correct)
+            return True
+        
+        return False
 
     def player_left(self, player):
         # removes player that left from scores and

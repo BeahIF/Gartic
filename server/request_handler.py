@@ -21,7 +21,8 @@ class Server(object):
                 try:
                     data = conn.recv(1024)
                     data = json.loads(data.decode())
-                except:
+                except Exception as e:
+                    print(e)
                     continue
                     # break
                 # keys = [key for key in data.split()]
@@ -40,7 +41,7 @@ class Server(object):
                     if player.game:
                         if key == 0:  # guess
                             correct = player.game.player_guess(
-                                player, data[0][0])
+                                player, data['0'][0])
                             send_msg[0] = correct
                         elif key == 1:  # skip
                             skip = player.game.skip()
@@ -77,7 +78,8 @@ class Server(object):
 
                 print(f"Exception{player.get_name()} disconected:", e)
                 break
-                # TODO call player game disconected method
+                
+        #player.game.player_disconnected(player)
         conn.close()
 
     def handle_queue(self, player):
