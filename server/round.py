@@ -2,7 +2,7 @@ import time
 from _thread import *
 import time as t
 from _thread import *
-#from game import Game
+# from game import Game
 from chat import Chat
 import threading
 
@@ -19,6 +19,7 @@ class Round(object):
         self.game = game
         self.player_scores = {player: 0 for player in self.game.players}
         self.time = 75
+        self.player_scores = players
         self.start = time.time()
         self.chat = Chat(self)
         threading.Timer(1, self.time_thread)
