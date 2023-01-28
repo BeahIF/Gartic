@@ -46,7 +46,8 @@ class Game(object):
             if player_ind >= self.player_draw_ind:
                 self.player_draw_ind -= 1
             self.players.remove(player)
-            self.round.player_left()
+            self.round.player_left(player)
+            self.round.chat.update_chat(f"Player {player.get_name()} disconnected.")
         else:
             raise Exception("Player not in the game ")
         if len(self.players < 2):
@@ -60,7 +61,9 @@ class Game(object):
         # Incrementa os rounds
         if (self.round):
             new_round = self.round.skip()
+            self.round.chat.update_chat(f"Player has voted to skip ({self.round.skips} / {len(self.players) -2})")
             if new_round:
+                self.round.chat.update_chat(f"Round has been skipped.")
                 self.round_ended()
                 return True
             return False
@@ -70,6 +73,7 @@ class Game(object):
 
     def round_ended(self):
         # If the round ends call this, reset round
+        self.round.chat.update_chat(f"Round {self.round_count} has ended")
         self.round.skips = 0
         self.start_new_round()
         self.board.clear()
