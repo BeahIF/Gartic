@@ -20,7 +20,7 @@ class Game(object):
         try:
             round_word = self.get_word()
             self.round = Round(
-                round_word, self.players[self.player_draw_ind], self.players, self)
+                round_word, self.players[self.player_draw_ind], self)
             # self.player_draw_ind += 1
             self.round_count += 1
 
@@ -83,9 +83,8 @@ class Game(object):
 
     def end_game(self):
         print(f"[GAME] Game {self.id} ended")
-        
         for player in self.players:
-            self.round.player_left(player)
+            player.game = None
         
 
     def get_word(self):

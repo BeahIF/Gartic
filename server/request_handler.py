@@ -21,10 +21,10 @@ class Server(object):
                 try:
                     data = conn.recv(1024)
                     data = json.loads(data.decode())
+                    print("[LOG] Recived data:", data)
                 except Exception as e:
-                    print(e)
-                    continue
-                    # break
+                    break
+                
                 # keys = [key for key in data.split()]
                 # keys = [int(data[0])]
                 keys = [int(key) for key in data.keys()]

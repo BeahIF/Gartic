@@ -25,7 +25,18 @@ class Network:
     def send(self, data):
         try:
             self.client.send(json.dumps(data).encode())
-            return json.loads(self.client.recv(2048).decode())
+            d = ""
+            
+            while 1:
+                last = self.client.recv(1024).decode()
+                d += last
+                try:
+                    if last.count("}") == 1:
+                        break
+                except:
+                    break
+
+            return json.loads(d)
         except socket.error as e:
             print(e)
 
@@ -41,4 +52,4 @@ class Network:
 
 n = Network("Finge que tem um nome interessante")
 # print(n.connect())
-print(n.send({1: []}))
+print(n.send({3: []}))
