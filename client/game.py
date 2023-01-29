@@ -4,6 +4,7 @@ from top_bar import TopBar
 import pygame
 from button import *
 from board import *
+from bottom_bar import BottomBar
 
 
 class Game:
@@ -18,8 +19,10 @@ class Game:
         self.top_bar = TopBar(10, 10, 1280, 100)
         self.top_bar.change_round(1)
         self.players = [Player("Bea")]
-        self.skip_button = TextButton(150, 450, 100, 50, (255, 255, 0), "Skip")
+        self.skip_button = TextButton(85, 830, 125, 60, (255, 255, 0), "Skip")
+        self.bottom_bar = BottomBar(305, 880, self)
         # self.drawingPlayer = False
+        self.draw_color = (0,0,0)
         for player in self.players:
             self.leaderboard.add_player(player)
 
@@ -29,6 +32,7 @@ class Game:
         self.top_bar.draw(self.win)
         self.board.draw(self.win)
         self.skip_button.draw(self.win)
+        self.bottom_bar.draw(self.win)
         pygame.display.update()
 
     def check_clicks(self):
@@ -37,7 +41,7 @@ class Game:
             print("Clicked o botao pular")
         clicked_board = self.board.click(*mouse)
         if clicked_board:
-            self.board.update(*clicked_board, (0, 0, 0))
+            self.board.update(*clicked_board, self.draw_color)
 
     def run(self):
         run = True
@@ -52,6 +56,7 @@ class Game:
                 # if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed()[0]:
                     self.check_clicks()
+                    self.bottom_bar.button_events()
         pygame.quit()
 
 

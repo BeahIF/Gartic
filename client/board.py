@@ -6,10 +6,10 @@ class Board(object):
     ROWS = COLS = 90
     COLORS = {
 
-        0: (255, 255, 255),  # white
+        0: (255, 255, 255), # white
         1: (0, 0, 0),       # black
         2: (255, 0, 0),     # red
-        3: (0, 255, 000),   # green
+        3: (0, 255, 0),     # green
         4: (0, 0, 255),     # blue
         5: (255, 255, 0),   # yellow
         6: (255, 140, 0),   # orange
@@ -21,8 +21,8 @@ class Board(object):
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.WIDTH = 520
-        self.HEIGHT = 480
+        self.WIDTH = 720
+        self.HEIGHT = 720
         self.compressed_board = []
         self.board = self.create_board()
         self.BORDER_THICKNESS = 5
