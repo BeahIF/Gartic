@@ -24,7 +24,7 @@ class Server(object):
                     print("[LOG] Recived data:", data)
                 except Exception as e:
                     break
-                
+
                 # keys = [key for key in data.split()]
                 # keys = [int(data[0])]
                 keys = [int(key) for key in data.keys()]
@@ -65,33 +65,44 @@ class Server(object):
                             skips = player.game.round.skips
                             send_msg[7] = skips
                         elif key == 8:  # update board
-                            x, y, color = data[8][:3]
+                            x, y, color = data['8'][:3]
                             self.game.update_board(x, y, color)
+
                         elif key == 9:  # get round time
-                            t = self.game.round.time
+                            t = player.game.round.time
                             send_msg[9] = t
-                    # if key == 10:
-                    #     raise Exception("Not valid request")
+                        elif key == 10:  # update board
+                            player.game.board.clear()
+                            # x, y, color = data['8'][:3]
+                            # self.game.update_board(x, y, color)
+                            # if key == 10:
+                            #     raise Exception("Not valid request")
                 send_msg = json.dumps(send_msg)
                 conn.sendall(send_msg.encode() + ".".encode())
-                
-            except Exception() as e:
+
+            except Exception as e:
 
                 print(f"Exception{player.get_name()} disconected:", e)
                 break
-                
-        #player.game.player_disconnected(player)
+        if player.game:
+            player.game.player_disconnected(player)
+        if player in self.connection_queue:
+            self.connection_queue.remove(player)
+
+        print(F"[DISCONECTADO] {player.name} ")
         conn.close()
 
     def handle_queue(self, player):
         self.connection_queue.append(player)
         if len(self.connection_queue) >= 2:
-            game = Game(self.game_id, self.connection_queue[:],)
-            for p in self.connection_queue:
+            game = Game(self.game_id, self.connection_queue[:])
+            # for p in self.connection_queue:
+            for p in game.players:
                 p.set_game(game)
             self.game_id += 1
 
             self.connection_queue = []
+            print(f"[GAME] Game {self.game_id -1} começando!")
 
     def authentication(self, conn, addr):
         try:

@@ -11,7 +11,7 @@ class Game(object):
         self.round = None
         self.board = Board()
         self.player_draw_ind = 0
-        #self.connected_thread = thread
+        # self.connected_thread = thread
         self.round_count = 1
         self.start_new_round()
 
@@ -42,26 +42,29 @@ class Game(object):
     def player_disconnected(self, player):
         # limpa os objetos quando o jogador sai
         if player in self.players:
-            player_ind = self.players.index(player)
-            if player_ind >= self.player_draw_ind:
-                self.player_draw_ind -= 1
+            # player_ind = self.players.index(player)
+            # if player_ind >= self.player_draw_ind:
+            # self.player_draw_ind -= 1
             self.players.remove(player)
             self.round.player_left(player)
-            self.round.chat.update_chat(f"Player {player.get_name()} disconnected.")
+
+            self.round.chat.update_chat(
+                f"Player {player.get_name()} disconnected.")
         else:
             raise Exception("Player not in the game ")
-        if len(self.players < 2):
+        if len(self.players <= 2):
             self.end_game()
 
     def get_player_scores(self):  # retorna um dicionario com a pontuação dos jogadores
         scores = {player.name: player.get_score() for player in self.players}
         return scores
 
-    def skip(self):
+    def skip(self, player):
         # Incrementa os rounds
         if (self.round):
-            new_round = self.round.skip()
-            self.round.chat.update_chat(f"Player has voted to skip ({self.round.skips} / {len(self.players) -2})")
+            new_round = self.round.skip(player)
+            self.round.chat.update_chat(
+                f"Player has voted to skip ({self.round.skips} / {len(self.players) -2})")
             if new_round:
                 self.round.chat.update_chat(f"Round has been skipped.")
                 self.round_ended()
@@ -89,7 +92,6 @@ class Game(object):
         print(f"[GAME] Game {self.id} ended")
         for player in self.players:
             player.game = None
-        
 
     def get_word(self):
         with open("words.txt", "r")as f:

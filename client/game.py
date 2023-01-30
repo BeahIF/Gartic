@@ -84,6 +84,9 @@ class Game:
                 self.chat.update_chat(response)
                 if not self.top_bar.word:
                     self.top_bar.word = self.connection.send({6: []})
+                    self.top_bar.round = self.connection.send({5: []})
+                    self.top_bar.max_round(len(self.players))
+
                 # response = self.connection.send({0: []})
                 # self.players = []
                 # for player in response:

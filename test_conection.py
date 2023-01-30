@@ -1,6 +1,7 @@
 import socket
 import json
 import pickle
+import time as t
 
 
 class Network:
@@ -22,7 +23,7 @@ class Network:
             # print(e)
             self.disconnect(e)
 
-    def send_str(self,data):
+    def send_str(self, data):
         try:
             self.client.connect(self.addr)
             self.client.sendall(self.name.encode())
@@ -35,23 +36,21 @@ class Network:
         try:
             self.client.send(json.dumps(data).encode())
             d = ""
-            
+
             while 1:
                 last = self.client.recv(1024).decode()
                 d += last
-                
+
                 try:
                     if d.count(".") == 1:
                         break
                 except:
                     pass
-                
-                
-                
+
             try:
                 if d[-1] == ".":
                     d = d[:-1]
-                    
+
             except:
                 pass
 
@@ -74,8 +73,9 @@ class Network:
 n = Network("Finge que tem um nome interessante")
 # print(n.connect())
 print("send 1")
-time = n.send({9: []})
+time = n.send({3: []})
 print(time)
+t.sleep(0.1)
 print("send 2")
-time = n.send({9: []})
+time = n.send({5: []})
 print(time)
