@@ -29,6 +29,7 @@ class Server(object):
                 # keys = [int(data[0])]
                 keys = [int(key) for key in data.keys()]
                 send_msg = {key: [] for key in keys}
+                last_board = None
 
                 for key in keys:
                     if key == -1:  # get game, retorna uma lista de jogadores
@@ -51,6 +52,7 @@ class Server(object):
                             send_msg[2] = content
                         elif key == 3:  # get board
                             brd = player.game.board.get_board()
+
                             send_msg[3] = brd
                         elif key == 4:  # get score
                             scores = player.game.get_player_scores()
@@ -75,7 +77,8 @@ class Server(object):
                             player.game.board.clear()
                             # x, y, color = data['8'][:3]
                             # self.game.update_board(x, y, color)
-                            # if key == 10:
+                        elif key == 11:
+                            send_msg[11] = player.game.round.player_drawing == player
                             #     raise Exception("Not valid request")
                 send_msg = json.dumps(send_msg)
                 conn.sendall(send_msg.encode() + ".".encode())

@@ -42,8 +42,8 @@ class Game:
         self.chat = Chat(1000, 125)
         # self.drawingPlayer = False
         self.draw_color = (0, 0, 0)
-        for player in self.players:
-            self.leaderboard.add_player(player)
+        # for player in self.players:
+        # self.leaderboard.add_player(player)
 
     def add_player(self, player):
         self.players.append(player)
@@ -76,17 +76,20 @@ class Game:
             clock.tick(60)
             try:
                 response = self.connection.send({3: []})
-                self.board.compressed_board = response
-                self.board.translate_board()
+                if response:
+                    self.board.compressed_board = response
+                    self.board.translate_board()
                 response = self.connection.send({9: []})
                 self.top_bar.time = response
                 response = self.connection.send({2: {}})
                 self.chat.update_chat(response)
-                if not self.top_bar.word:
-                    self.top_bar.word = self.connection.send({6: []})
-                    self.top_bar.round = self.connection.send({5: []})
-                    self.top_bar.max_round(len(self.players))
-
+                # if not self.top_bar.word:
+                self.top_bar.word = self.connection.send({6: []})
+                self.top_bar.round = self.connection.send({5: []})
+                self.drawing = self.connection.send({11: []})
+                # self.top_bar.max_round(len(self.players))
+                self.top_bar.drawing = self.drawing
+                self.top_bar.max_round = len(self.players)
                 # response = self.connection.send({0: []})
                 # self.players = []
                 # for player in response:
@@ -106,15 +109,16 @@ class Game:
                     self.check_clicks()
                     self.bottom_bar.button_events()
                 if event.type in pygame.KEYDOWN:
-                    if event.key == pygame.K_RETURN:
-                        self.chat.update_chat()
-                        self.connection.send({0: [self.chat.typing]})
-                        self.chat.typing = ""
-                    else:
+                    if not self.drawing:
+                        if event.key == pygame.K_RETURN:
+                            # self.chat.update_chat()
+                            self.connection.send({0: [self.chat.typing]})
+                            self.chat.typing = ""
+                        else:
 
-                        key_name = pygame.key.name(event.key)
-                        key_name = key_name.lower()
-                        self.chat.type(key_name)
+                            key_name = pygame.key.name(event.key)
+                            key_name = key_name.lower()
+                            self.chat.type(key_name)
         pygame.quit()
 
 

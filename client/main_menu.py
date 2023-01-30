@@ -8,13 +8,14 @@ class MainMenu:
     BG = (255, 255, 255)
 
     def __init__(self) -> None:
-        self.WIDTH = 1300
-        self.HEIGHT = 1000
+        self.WIDTH = 800
+        self.HEIGHT = 500
         self.win = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.name = ""
         self.waiting = False
-        self.name_font = pygame.font.SysFont("comicsans", 80)
-        self.title_font = pygame.font.SysFont("comicsans", 120)
+        self.name_font = pygame.font.SysFont("comicsans", 50)
+        self.title_font = pygame.font.SysFont("comicsans", 90)
+        self.enter_font = pygame.font.SysFont("comicsans", 55)
 
     def draw(self):
         self.win.fill(self.BG)
@@ -24,8 +25,8 @@ class MainMenu:
         name = self.name_font.render("Qual seu nome?"+self.name, 1, (0, 0, 0))
         self.win.blit(name, (100, 400))
 
-        enter = self.enter_font.render("Clique para jogar", 1, (0, 0, 0))
-        self.win.blit(enter, (self.WIDTH/2 - title.get_width()/2, 50))
+        # enter = self.enter_font.render("Clique para jogar", 1, (0, 0, 0))
+        # self.win.blit(enter, (self.WIDTH/2 - title.get_width()/2, 50))
 
         if self.waiting:
             enter = self.enter_font.render("Na fila....", 1, (0, 0, 0))
@@ -41,6 +42,7 @@ class MainMenu:
         clock = pygame.time.Clock()
         while run:
             clock.tick(30)
+            self.draw()
             if self.waiting:
                 response = self.n.send({-1: []})
                 if response:
@@ -60,7 +62,7 @@ class MainMenu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if len(self.name) > 1:
-                            run = False
+                            # run = False
                             self.waiting = True
                             self.n = Network(self.name)
                             # response =
