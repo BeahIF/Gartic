@@ -1,7 +1,6 @@
 import socket
 import json
 import pickle
-import time as t
 
 
 class Network:
@@ -73,9 +72,8 @@ class Network:
 n = Network("Finge que tem um nome interessante")
 # print(n.connect())
 print("send 1")
-time = n.send({3: []})
+time = n.send({9: []})
 print(time)
-t.sleep(0.1)
 print("send 2")
-time = n.send({5: []})
+time = n.send({9: []})
 print(time)

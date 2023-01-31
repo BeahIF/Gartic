@@ -15,20 +15,25 @@ class Round(object):
         self.word = word
         self.player_drawing = player_drawing
         self.player_guessed = []
+        self.players_skipped = []
         self.skips = 0
         self.time = 75
         self.game = game
         self.player_scores = {player: 0 for player in self.game.players}
-        #self.start = time.time()
+        # self.start = time.time()
         self.chat = Chat(self)
-        #threading.Timer(1, self.time_thread)
+        # threading.Timer(1, self.time_thread)
         start_new_thread(self.time_thread, ())
 
-    def skip(self):
-        self.skips += 1
-        if self.skips > len(self.game.players)-2:
-            self.skips = 0
-            return True
+    def skip(self, player):
+        if player not in self.players_skipped:
+            self.chat.update_chat(
+                f"Jogador votou para pular ({self.skips}/{len(self.players)-2})")
+            self.players_skipped.append(player)
+            self.skips += 1
+            if self.skips > len(self.game.players)-2:
+                # self.skips = 0
+                return True
         return False
 
     def get_scores(self):
@@ -61,7 +66,7 @@ class Round(object):
             # TODO implementar o sistema de score
             self.chat.update_chat(f"{player.name} has guessed the word.")
             return True
-        
+
         self.chat.update_chat(f"{player.name} guessed {wrd}")
         return False
 
@@ -74,7 +79,8 @@ class Round(object):
         if player in self.player_guessed:
             self.player_guessed.remove(player)
         if player == self.player_drawing:
-            self.chat.update_chat(f"Round has been skipped becouse the drawer left.")
+            self.chat.update_chat(
+                f"Round has been skipped becouse the drawer left.")
             self.end_round("Tempo da rodada acabou ")
 
     def end_round(self, msg):
